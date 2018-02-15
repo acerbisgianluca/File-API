@@ -1,4 +1,5 @@
 # FileManager [WORK IN PROGRESS]
+[![Build Status](https://travis-ci.org/acerbisgianluca/FileManager.svg?branch=master)](https://travis-ci.org/acerbisgianluca/FileManager)
 An useful API for interacting with files in Java.
 ### Features:
 * Write a string to a file;

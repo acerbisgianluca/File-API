@@ -30,6 +30,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Field;
@@ -55,10 +56,12 @@ public class FileManager {
      * @param obj Object to be written. 
      * @param fileName Name (with extension) of the file or the full path passed as a string, e.g "C:\\Users\\YourName\\Desktop\\FileName.someThing", where the object will be written to.
      * @throws IOException If an I/O error occurs. In particular, an IOException may be thrown if the output stream has been closed.
+     * @throws java.io.NotSerializableException Thrown when an instance is required to have a Serializable interface.
      */
-    public void objectToFile (Object obj, String fileName) throws IOException {
+    public void objectToFile (Object obj, String fileName) throws IOException, NotSerializableException {
         try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(fileName))) {
             stream.writeObject(obj);
+            stream.close();
         }
     }
     
@@ -68,11 +71,13 @@ public class FileManager {
      * @return Object The general object read from the stream which must be casted into a specific type.
      * @throws IOException If an I/O error occurs. In particular, an IOException may be thrown if the input stream has been closed.
      * @throws ClassNotFoundException Class of a serialized object cannot be found.
+     * @throws java.io.NotSerializableException Thrown when an instance is required to have a Serializable interface.
      */
-    public Object fileToObject (String fileName) throws IOException, ClassNotFoundException {
+    public Object fileToObject (String fileName) throws IOException, ClassNotFoundException, NotSerializableException {
         Object obj;
         try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(fileName))) {
             obj = (Object) stream.readObject();
+            stream.close();
         }
         return obj;
     }
@@ -111,7 +116,7 @@ public class FileManager {
      * @return A string composed of all the attribute values separated by comma. The first line contains attribute names.
      * @throws IllegalAccessException Application tries to reflectively create an instance (other than an array), set or get a field, or invoke a method, but the currently executing method does not have access to the definition of the specified class, field, method or constructor.
      */
-    public String objectToCSV (Object[] obj) throws IllegalAccessException {
+    public String objectsToCSV (Object[] obj) throws IllegalAccessException {
         Class<?> c = obj[0].getClass();
         String out = "";
         Field[] attr = c.getDeclaredFields();
@@ -145,6 +150,7 @@ public class FileManager {
     public void stringToFile (String string, String fileName) throws IOException {
         try (BufferedWriter bw = new BufferedWriter (new FileWriter(fileName))) {
             bw.write(string);
+            bw.close();
         }
     }
     
@@ -160,8 +166,9 @@ public class FileManager {
         try (BufferedReader br = new BufferedReader (new FileReader(fileName))) {
             while((line = br.readLine()) != null)
                 out.add(line.concat("\n"));
+            br.close();
         }
-        
+               
         return out;
     }
 }
