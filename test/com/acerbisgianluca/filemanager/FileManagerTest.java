@@ -58,81 +58,81 @@ public class FileManagerTest {
 
     /**
      * Test of objectToFile method, of class FileManager.
+     * @throws java.lang.Exception
      */
     @Test
     public void testObjectToFile() throws Exception {
         System.out.println("objectToFile");
         String fileName = "test.txt";
         TestObject test = new TestObject("mario", "rossi");
-        FileManager instance = new FileManager();
-        instance.objectToFile(test, fileName);
+        FileManager.objectToFile(test, fileName);
     }
 
     /**
      * Test of fileToObject method, of class FileManager.
+     * @throws java.lang.Exception
      */
     @Test
     public void testFileToObject() throws Exception {
         System.out.println("fileToObject");
         String fileName = "test.txt";
-        FileManager instance = new FileManager();
         TestObject expResult = new TestObject("mario", "rossi");
-        instance.objectToFile(expResult, fileName);
-        TestObject result = (TestObject) instance.fileToObject(fileName);
+        FileManager.objectToFile(expResult, fileName);
+        TestObject result = (TestObject) FileManager.fileToObject(fileName);
         assertEquals(expResult, result);
     }
 
     /**
      * Test of objectToCSV method, of class FileManager.
+     * @throws java.lang.Exception
      */
     @Test
     public void testObjectToCSV() throws Exception {
         System.out.println("objectToCSV");
         TestObject obj = new TestObject("mario", "rossi");
-        FileManager instance = new FileManager();
         String expResult = "nome,cognome\n" +"mario,rossi\n" +"";
-        String result = instance.objectToCSV(obj);
+        String result = FileManager.objectToCSV(obj);
         assertEquals(expResult, result);
     }
 
     /**
      * Test of objectsToCSV method, of class FileManager.
+     * @throws java.lang.Exception
      */
     @Test
     public void testObjectsToCSV() throws Exception {
         System.out.println("objectsToCSV");
         TestObject[] obj = new TestObject[]{new TestObject("mario", "rossi"), new TestObject("gesu", "cristo")};
-        FileManager instance = new FileManager();
         String expResult = "nome,cognome\n" +"mario,rossi\n" +"gesu,cristo\n" +"";
-        String result = instance.objectsToCSV(obj);
+        String result = FileManager.objectsToCSV(obj);
         assertEquals(expResult, result);
     }
 
     /**
      * Test of stringToFile method, of class FileManager.
+     * @throws java.lang.Exception
      */
     @Test
     public void testStringToFile() throws Exception {
         System.out.println("stringToFile");
         String string = "test";
         String fileName = "string.txt";
-        FileManager instance = new FileManager();
-        instance.stringToFile(string, fileName);
+        FileManager.stringToFile(string, fileName);
     }
 
     /**
      * Test of fileToString method, of class FileManager.
+     * @throws java.lang.Exception
      */
     @Test
     public void testFileToString() throws Exception {
         System.out.println("fileToString");
         String fileName = "string.txt";
-        FileManager instance = new FileManager();
         String string = "test";
-        instance.stringToFile(string, fileName);
+        FileManager.stringToFile(string, fileName);
         ArrayList<String> expResult = new ArrayList<>();
         expResult.add("test\n");
-        ArrayList<String> result = instance.fileToString(fileName);
+        ArrayList<String> result = FileManager.fileToString(fileName);
         assertEquals(expResult, result);
     }
     

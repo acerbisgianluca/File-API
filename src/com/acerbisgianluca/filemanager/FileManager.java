@@ -40,16 +40,10 @@ import java.util.ArrayList;
  * An useful API for interacting with files.
  * 
  * @author Acerbis Gianluca
- * @version 1.0
+ * @version 1.1
  * @since 12-21-2017
  */
 public class FileManager {
-
-    /**
-     * Creates a new FileManager.
-     */
-    public FileManager() {
-    }
     
     /**
      * Writes a given object to a file with a given name.
@@ -58,7 +52,7 @@ public class FileManager {
      * @throws IOException If an I/O error occurs. In particular, an IOException may be thrown if the output stream has been closed.
      * @throws java.io.NotSerializableException Thrown when an instance is required to have a Serializable interface.
      */
-    public void objectToFile (Object obj, String fileName) throws IOException, NotSerializableException {
+    public static void objectToFile (Object obj, String fileName) throws IOException, NotSerializableException {
         try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(fileName))) {
             stream.writeObject(obj);
             stream.close();
@@ -68,12 +62,12 @@ public class FileManager {
     /**
      * Reads an object from a given file.
      * @param fileName Name (with extension) of the file or the full path passed as a string, e.g "C:\\Users\\YourName\\Desktop\\FileName.someThing", where the object will be read from.
-     * @return Object The general object read from the stream which must be casted into a specific type.
+     * @return Object The object read from the stream which must be casted into a specific type.
      * @throws IOException If an I/O error occurs. In particular, an IOException may be thrown if the input stream has been closed.
      * @throws ClassNotFoundException Class of a serialized object cannot be found.
      * @throws java.io.NotSerializableException Thrown when an instance is required to have a Serializable interface.
      */
-    public Object fileToObject (String fileName) throws IOException, ClassNotFoundException, NotSerializableException {
+    public static Object fileToObject (String fileName) throws IOException, ClassNotFoundException, NotSerializableException {
         Object obj;
         try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(fileName))) {
             obj = (Object) stream.readObject();
@@ -88,7 +82,7 @@ public class FileManager {
      * @return A string composed of all the attribute values separated by comma. The first line contains attribute names.
      * @throws IllegalAccessException Application tries to reflectively create an instance (other than an array), set or get a field, or invoke a method, but the currently executing method does not have access to the definition of the specified class, field, method or constructor.
      */
-    public String objectToCSV (Object obj) throws IllegalAccessException {
+    public static String objectToCSV (Object obj) throws IllegalAccessException {
         Class<?> c = obj.getClass();
         String out = "";
         Field[] attr = c.getDeclaredFields();
@@ -112,12 +106,12 @@ public class FileManager {
     
     /**
      * Creates a strings which contains all the attributes of each object in the array separated by comma.
-     * @param obj Object array whose attributes will be extracted.
+     * @param objs Object array whose attributes will be extracted.
      * @return A string composed of all the attribute values separated by comma. The first line contains attribute names.
      * @throws IllegalAccessException Application tries to reflectively create an instance (other than an array), set or get a field, or invoke a method, but the currently executing method does not have access to the definition of the specified class, field, method or constructor.
      */
-    public String objectsToCSV (Object[] obj) throws IllegalAccessException {
-        Class<?> c = obj[0].getClass();
+    public static String objectsToCSV (Object[] objs) throws IllegalAccessException {
+        Class<?> c = objs[0].getClass();
         String out = "";
         Field[] attr = c.getDeclaredFields();
         for(int i = 0; i < attr.length; i++) {
@@ -127,13 +121,14 @@ public class FileManager {
                 out += attr[i].getName() + "\n";
         }
         
-        for (Object obj1 : obj) {
+        for (Object obj : objs) {
             for (int j = 0; j < attr.length; j++) {
                 attr[j].setAccessible(true);
                 if (j != attr.length - 1) {
-                    out += attr[j].get(obj1) + ",";
-                } else {
-                    out += attr[j].get(obj1) + "\n";
+                    out += attr[j].get(obj) + ",";
+                }
+                else {
+                    out += attr[j].get(obj) + "\n";
                 }
             }
         }
@@ -147,7 +142,7 @@ public class FileManager {
      * @param fileName Name (with extension) of the file or the full path passed as a string, e.g "C:\\Users\\YourName\\Desktop\\FileName.someThing", where the string will be written to.
      * @throws IOException If an I/O error occurs. In particular, an IOException may be thrown if the output stream has been closed.
      */
-    public void stringToFile (String string, String fileName) throws IOException {
+    public static void stringToFile (String string, String fileName) throws IOException {
         try (BufferedWriter bw = new BufferedWriter (new FileWriter(fileName))) {
             bw.write(string);
             bw.close();
@@ -160,7 +155,7 @@ public class FileManager {
      * @return An ArrayList which contains an item for each line in the given file.
      * @throws IOException If an I/O error occurs. In particular, an IOException may be thrown if the input stream has been closed.
      */
-    public ArrayList<String> fileToString (String fileName) throws IOException {
+    public static ArrayList<String> fileToString (String fileName) throws IOException {
         ArrayList<String> out = new ArrayList<>();
         String line;
         try (BufferedReader br = new BufferedReader (new FileReader(fileName))) {
@@ -168,7 +163,7 @@ public class FileManager {
                 out.add(line.concat("\n"));
             br.close();
         }
-               
+
         return out;
     }
 }
